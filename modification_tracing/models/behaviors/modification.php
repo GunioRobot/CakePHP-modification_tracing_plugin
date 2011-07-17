@@ -129,8 +129,8 @@ class ModificationBehavior extends ModelBehavior {
 			foreach($this->_before as $className => $vals) {
 				if ($className == $this->_modelName) { continue; }
 				foreach($vals as $key => $val){
-					if ($this->__isNotModificatorOrDescription($className, $key)) {
-						$modifications[$className][$key] = array('b' => $val, 'a' => '');
+					if ($this->__isNotModificatorOrDescription($className, $key) && $key != $model->primaryKey) {
+						$modifications[$className][$key] = array('before' => $val, 'after' => '');
 					}
 				}
 			}
