@@ -141,6 +141,38 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         $this->assertEqual($modifications, $expected);
     }
 
+    function test__isNotModificatorOrDescription() {
+        $this->assertTrue($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('test'));
+        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('modificator'));
+        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('description'));
+    }
+
+    function test__getModificator() {
+        $expected= 'user1';
+
+        $data = array('Dummy' => $this->_expectedSample['Dummy']);
+        $this->Dummy->set($data);
+        $this->assertIdentical($this->Dummy->Behaviors->Modification->__getModificator($this->Dummy), '');
+
+        $data['Dummy']['modificator'] = $expected;
+        $this->Dummy->set($data);
+
+        $this->assertIdentical($this->Dummy->Behaviors->Modification->__getModificator($this->Dummy), $expected);
+    }
+
+    function test__getDescription() {
+        $expected= 'modify username';
+
+        $data = array('Dummy' => $this->_expectedSample['Dummy']);
+        $this->Dummy->set($data);
+        $this->assertIdentical($this->Dummy->Behaviors->Modification->__getDescription($this->Dummy), '');
+
+        $data['Dummy']['description'] = $expected;
+        $this->Dummy->set($data);
+
+        $this->assertIdentical($this->Dummy->Behaviors->Modification->__getDescription($this->Dummy), $expected);
+    }
+
     function __unsetChangeable($modifications) {
         $count = count($modifications);
         $ret = array($count);
