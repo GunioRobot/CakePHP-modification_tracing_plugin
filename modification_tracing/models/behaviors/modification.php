@@ -167,7 +167,7 @@ class ModificationBehavior extends ModelBehavior {
 	function __saveModification(&$model, $index, $modifications, $modificator, $description){
 		// Create modification.
 		$data = array(
-			$this->_modelName => array(
+			'Modification' => array(
 				'model_name' => $model->name,
 				'foreign_key' => $model->id,
 				'operation' => $index,
