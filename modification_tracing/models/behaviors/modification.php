@@ -73,7 +73,8 @@ class ModificationBehavior extends ModelBehavior {
 		if ($this->_before){ // edit
 			$index = MODIFICATION_MODIFY;
 			if ($model->data) {
-				foreach($model->data as $className => $new){
+				foreach($model->data as $className => $new) {
+                    if ($className == $this->_modelName) { continue; }
 					$old = (isset($this->_before[$className])) ? $this->_before[$className] : array();
 					foreach($new as $key => $val){
 						if (// 前データがあって、フォーム値と異なる場合
@@ -93,6 +94,7 @@ class ModificationBehavior extends ModelBehavior {
 			$index = MODIFICATION_CREATE;
 			if ($model->data){
 				foreach($model->data as $className => $vals) {
+                    if ($className == $this->_modelName) { continue; }
 					foreach($vals as $key => $val){
 						if ($this->__isNotModificatorOrDescription($className, $key)) {
 							$modifications[$className][$key] = array('before' => '', 'after' => $val);
