@@ -4,12 +4,6 @@ define('MODIFICATION_MODIFY', 2);
 define('MODIFICATION_DELETE', 3);
 
 class ModificationBehavior extends ModelBehavior {
-	var $str_indexes = array(
-		MODIFICATION_CREATE => 'create',
-		MODIFICATION_MODIFY => 'modify',
-		MODIFICATION_DELETE => 'delete'
-	);
-
 	var $_modelName = null;
 	var $_modificatorField = false;
 	var $_descriptionField = false;
@@ -55,7 +49,6 @@ class ModificationBehavior extends ModelBehavior {
 			if (array_key_exists($this->_modelName, $r)){
 				for ($j=0; $j<count($r[$this->_modelName]); $j++){
 					$r[$this->_modelName][$j]['modifications'] = json_decode($r[$this->_modelName][$j]['modifications'], true);
-					$r[$this->_modelName][$j]['operation'] = $this->str_indexes[$r[$this->_modelName][$j]['operation']]; // TODO: 格好悪い
 				}
 			}
 		}
