@@ -252,7 +252,6 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         for ($i=0; $i<$count; $i++) {
             unset($modifications[$i]['id']);
             unset($modifications[$i]['created']);
-            unset($modifications[$i]['modified']);
             $ret[$i] = $modifications[$i];
         }
 
@@ -317,7 +316,6 @@ class ModificationbehaviorTestCase extends CakeTestCase {
                     'modificator' => 'user3',
                     'description' => 'Œð’ÊŽè’i•ÏX',
                     'created' => '2011-07-14 23:31:22',
-                    'modified' => '2011-07-14 23:31:22'
                 ),
                 array(
                     'id' => 2,
@@ -333,7 +331,6 @@ class ModificationbehaviorTestCase extends CakeTestCase {
                     'modificator' => 'user2',
                     'description' => '1,3“ú–ÚOFF',
                     'created' => '2011-07-14 23:30:22',
-                    'modified' => '2011-07-14 23:30:22'
                 ),
                 array(
                     'id' => 1,
@@ -353,7 +350,6 @@ class ModificationbehaviorTestCase extends CakeTestCase {
                     'modificator' => 'user1',
                     'description' => 'create',
                     'created' => '2011-07-14 23:29:22',
-                    'modified' => '2011-07-14 23:29:22'
                 ),
             ),
         );
