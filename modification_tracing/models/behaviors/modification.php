@@ -82,7 +82,7 @@ class ModificationBehavior extends ModelBehavior {
 						    // 前データがなく、値が空でなく(理由忘れた…)、主キーでない場合 TODO: なんで？
 						     (! array_key_exists($key, $old) && ! $val && $key != $model->primaryKey)) &&
 						    // キーが modificator, descripition でない
-						    $this->__isNotModificatorOrDescription($className, $key)) // TODO: メソッド名ェ…
+						    $this->__isNotModificatorOrDescription($key))
 					    {
 							$o = array_key_exists($key, $old) ? $old[$key] : '';
 							$modifications[$className][$key] = array('before' => $o, 'after' => $val);
@@ -96,7 +96,7 @@ class ModificationBehavior extends ModelBehavior {
 				foreach($model->data as $className => $vals) {
                     if ($className == $this->_modelName) { continue; }
 					foreach($vals as $key => $val){
-						if ($this->__isNotModificatorOrDescription($className, $key)) {
+						if ($this->__isNotModificatorOrDescription($key)) {
 							$modifications[$className][$key] = array('before' => '', 'after' => $val);
 						}
 					}
@@ -129,7 +129,7 @@ class ModificationBehavior extends ModelBehavior {
 			foreach($this->_before as $className => $vals) {
 				if ($className == $this->_modelName) { continue; }
 				foreach($vals as $key => $val){
-					if ($this->__isNotModificatorOrDescription($className, $key) && $key != $model->primaryKey) {
+					if ($this->__isNotModificatorOrDescription($key) && $key != $model->primaryKey) {
 						$modifications[$className][$key] = array('before' => $val, 'after' => '');
 					}
 				}
@@ -145,7 +145,7 @@ class ModificationBehavior extends ModelBehavior {
 		);
 	}
 
-	function __isNotModificatorOrDescription($className, $key){
+	function __isNotModificatorOrDescription($key){
 	    return ($this->_modificatorField != $key) && ($this->_descriptionField != $key);
 	}
 
