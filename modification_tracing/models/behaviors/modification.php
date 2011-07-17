@@ -150,7 +150,6 @@ class ModificationBehavior extends ModelBehavior {
 	}
 
 	function __getModificator(&$model){
-        var_dump($model->data[$model->name][$this->_modificatorField]);
 		if ($this->_modificatorField && isset($model->data[$model->name][$this->_modificatorField]) && $model->data[$model->name][$this->_modificatorField]) {
 	    	return $model->data[$model->name][$this->_modificatorField];
 	    }
