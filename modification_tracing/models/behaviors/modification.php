@@ -31,7 +31,8 @@ class ModificationBehavior extends ModelBehavior {
 
 	function beforeFind(&$model, $queryData)
 	{
-		if (! array_key_exists($this->_modelName, $model->hasMany)){
+        $queryData = array_merge(array('modificationTracing' => true), $queryData); // beforeSave の find では false
+		if ($queryData['modificationTracing'] && ! array_key_exists($this->_modelName, $model->hasMany)){
 			$assoc = array(
 				$this->_modelName => array(
 		            'className' => 'Modification',
@@ -41,7 +42,9 @@ class ModificationBehavior extends ModelBehavior {
 				)
 			);
 			$model->bindModel(array('hasMany' => $assoc), true);
-		}
+        } else {
+            $model->unbindModel(array('hasMany' => array('$this->_modelName')));
+        }
 
 		return true;
 	}
@@ -63,8 +66,10 @@ class ModificationBehavior extends ModelBehavior {
 	var $_before = array();
 	function beforeSave(&$model){
 		if ($model->id){
-			$this->_before = $model->find('first', array('conditions' => array($model->primaryKey => $model->id)));
-		}
+			$this->_before = $model->find('first', array('conditions' => array($model->primaryKey => $model->id), 'modificationTracing' => false));
+        } else {
+            $this->_before = array();
+        }
 		return true;
 	}
 
