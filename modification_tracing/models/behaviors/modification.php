@@ -4,20 +4,21 @@ define('MODIFICATION_MODIFY', 2);
 define('MODIFICATION_DELETE', 3);
 
 class ModificationBehavior extends ModelBehavior {
+    var $_tableName = null;
 	var $_modelName = null;
 	var $_modificatorField = false;
 	var $_descriptionField = false;
 
 	function setup(&$model, $config = array()){
 		$default = array(
-            // TODO: tableName
+            'tableName' => 'modifications',
 			'modelName' => 'Modification',
 			'modificatorField' => 'modificator',
 			'descriptionField' => 'description',
 		);
 		$option = array_merge($default, $config);
 
-        // TODO: tableName
+        $this->_tableName = $option['tableName'];
 		$this->_modelName = $option['modelName'];
 		$this->_modificatorField = $option['modificatorField'];
 		$this->_descriptionField = $option['descriptionField'];
@@ -37,8 +38,9 @@ class ModificationBehavior extends ModelBehavior {
 				)
 			);
 			$model->bindModel(array('hasMany' => $assoc), true);
+            $model->{$this->_modelName}->setSource($this->_tableName);
         } else {
-            $model->unbindModel(array('hasMany' => array('$this->_modelName')));
+            $model->unbindModel(array('hasMany' => array($this->_modelName)));
         }
 
 		return true;
@@ -177,9 +179,10 @@ class ModificationBehavior extends ModelBehavior {
 			)
 		);
 
-		$m_model = ClassRegistry::init('Modification');
-		$m_model->create();
-		return $m_model->save($data);
+		$this->Modification =& ClassRegistry::init('Modification');
+        $this->Modification->setSource($this->_tableName);
+		$this->Modification->create();
+		return $this->Modification->save($data);
 	}
 }
 

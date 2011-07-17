@@ -9,6 +9,7 @@ class Dummy extends Model {
 class DummyCustom extends Dummy {
     var $useTable = 'dummies';
     var $actsAs = array('ModificationTracing.Modification' => array(
+        'tableName' => 'mod_trac',
         'modelName' => 'ModTrac',
         'modificatorField' => 'mod_user',
         'descriptionField' => 'mod_note',
@@ -16,7 +17,11 @@ class DummyCustom extends Dummy {
 }
 
 class ModificationbehaviorTestCase extends CakeTestCase {
-    var $fixtures = array('plugin.modification_tracing.dummy', 'plugin.modification_tracing.modification');
+    var $fixtures = array(
+        'plugin.modification_tracing.dummy',
+        'plugin.modification_tracing.modification',
+        'plugin.modification_tracing.mod_trac'
+    );
 
 	function startTest() {
         $this->Dummy =& ClassRegistry::init('Dummy');
