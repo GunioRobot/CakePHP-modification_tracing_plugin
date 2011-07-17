@@ -38,7 +38,7 @@ class ModificationBehavior extends ModelBehavior {
 		            'className' => 'Modification',
 		            'foreignKey' => 'foreign_key',
 		            'conditions' => array('Modification.model_name' => $model->name),
-					'order' => array('Modification.created' => 'desc'),
+					'order' => array('Modification.created' => 'desc', 'Modification.id' => 'desc'),
 				)
 			);
 			$model->bindModel(array('hasMany' => $assoc), true);
