@@ -31,8 +31,9 @@ class ModificationBehavior extends ModelBehavior {
 				$this->_modelName => array(
 		            'className' => 'Modification',
 		            'foreignKey' => 'foreign_key',
-		            'conditions' => array('Modification.model_name' => $model->name),
-					'order' => array('Modification.created' => 'desc', 'Modification.id' => 'desc'),
+		            'conditions' => array($this->_modelName.'.model_name' => $model->name),
+					'order' => array($this->_modelName.'.created' => 'desc', $this->_modelName.'.id' => 'desc'),
+                    'fields' => array('id', 'model_name', 'foreign_key', 'operation', 'modifications', 'modificator AS '.$this->_modificatorField, 'description AS '.$this->_descriptionField, 'created', 'modified'),
 				)
 			);
 			$model->bindModel(array('hasMany' => $assoc), true);

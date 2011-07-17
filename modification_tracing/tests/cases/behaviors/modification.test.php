@@ -9,6 +9,7 @@ class Dummy extends Model {
 class DummyCustom extends Dummy {
     var $useTable = 'dummies';
     var $actsAs = array('ModificationTracing.Modification' => array(
+        'modelName' => 'ModTrac',
         'modificatorField' => 'mod_user',
         'descriptionField' => 'mod_note',
     ));
@@ -197,6 +198,46 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         $dataCustom['DummyCustom']['mod_note'] = $expected;
         $this->DummyCustom->set($dataCustom);
         $this->assertIdentical($this->DummyCustom->Behaviors->Modification->__getDescription($this->DummyCustom), $expected);
+        unset($this->DummyCustom);
+    }
+    
+    function testCustomModelAndFieldName() {
+        $this->DummyCustom = ClassRegistry::init('DummyCustom');
+
+        $create = array(
+            'DummyCustom' => array(
+                'name' => 'dummy1',
+                'day1' => 1,
+                'day2' => 1,
+                'day3' => 1,
+                'go' => 1,
+                'back' => 1,
+            )
+        );
+        $this->DummyCustom->create();
+        $this->DummyCustom->save(array_merge_recursive($create, array('DummyCustom' => array('mod_user' => 'user1', 'mod_note' => 'create'))));
+
+        $insertedID = $this->DummyCustom->getLastInsertID();
+        $created = $this->DummyCustom->findById($insertedID);
+        $created['ModTrac'] = $this->__unsetChangeable($created['ModTrac']);
+
+        $expected = array(
+            'DummyCustom' => $create['DummyCustom'],
+            'ModTrac' => $this->__unsetChangeable(array($this->_expectedSample['Modification'][2]))  // key: Modification -> ModTrac
+        );
+        $expected['DummyCustom']['id'] = $insertedID;
+        $expected['ModTrac'][0] = array_merge($expected['ModTrac'][0], array(
+            'model_name' => 'DummyCustom',
+            'foreign_key' => $insertedID,
+            'modifications' => array('DummyCustom' => $expected['ModTrac'][0]['modifications']['Dummy']),  // key: Dummy -> DummyCustom
+            'mod_user' => $expected['ModTrac'][0]['modificator'],  // key: modificator -> mod_user
+            'mod_note' => $expected['ModTrac'][0]['description'],  // key: description -> mod_note
+        ));
+        unset($expected['ModTrac'][0]['modificator']);  // unset key 'modificator'
+        unset($expected['ModTrac'][0]['description']);  // unset key 'description'
+
+        $this->assertEqual($created, $expected);
+
         unset($this->DummyCustom);
     }
 
