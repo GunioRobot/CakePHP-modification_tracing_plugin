@@ -54,7 +54,7 @@ class ModificationBehavior extends ModelBehavior {
 			$r =& $results[$i];
 			if (array_key_exists($this->_modelName, $r)){
 				for ($j=0; $j<count($r[$this->_modelName]); $j++){
-					$r[$this->_modelName][$j]['modifications'] = json_decode($r[$this->_modelName][$j]['modifications']);
+					$r[$this->_modelName][$j]['modifications'] = json_decode($r[$this->_modelName][$j]['modifications'], true);
 					$r[$this->_modelName][$j]['operation'] = $this->str_indexes[$r[$this->_modelName][$j]['operation']]; // TODO: 格好悪い
 				}
 			}
