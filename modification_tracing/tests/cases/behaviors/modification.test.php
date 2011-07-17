@@ -6,6 +6,14 @@ class Dummy extends Model {
     var $actsAs = array('ModificationTracing.Modification');
 }
 
+class DummyCustom extends Dummy {
+    var $useTable = 'dummies';
+    var $actsAs = array('ModificationTracing.Modification' => array(
+        'modificatorField' => 'mod_user',
+        'descriptionField' => 'mod_note',
+    ));
+}
+
 class ModificationbehaviorTestCase extends CakeTestCase {
     var $fixtures = array('plugin.modification_tracing.dummy', 'plugin.modification_tracing.modification');
 
@@ -145,6 +153,13 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         $this->assertTrue($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('test'));
         $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('modificator'));
         $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('description'));
+
+        $this->DummyCustom = ClassRegistry::init('DummyCustom');
+        $this->assertTrue($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('modificator'));
+        $this->assertTrue($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('description'));
+        $this->assertFalse($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('mod_user'));
+        $this->assertFalse($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('mod_note'));
+        unset($this->DummyCustom);
     }
 
     function test__getModificator() {
@@ -156,8 +171,14 @@ class ModificationbehaviorTestCase extends CakeTestCase {
 
         $data['Dummy']['modificator'] = $expected;
         $this->Dummy->set($data);
-
         $this->assertIdentical($this->Dummy->Behaviors->Modification->__getModificator($this->Dummy), $expected);
+
+        $this->DummyCustom = ClassRegistry::init('DummyCustom');
+        $dataCustom = array('DummyCustom' => $data['Dummy']);
+        $dataCustom['DummyCustom']['mod_user'] = $expected;
+        $this->DummyCustom->set($dataCustom);
+        $this->assertIdentical($this->DummyCustom->Behaviors->Modification->__getModificator($this->DummyCustom), $expected);
+        unset($this->DummyCustom);
     }
 
     function test__getDescription() {
@@ -169,8 +190,14 @@ class ModificationbehaviorTestCase extends CakeTestCase {
 
         $data['Dummy']['description'] = $expected;
         $this->Dummy->set($data);
-
         $this->assertIdentical($this->Dummy->Behaviors->Modification->__getDescription($this->Dummy), $expected);
+
+        $this->DummyCustom = ClassRegistry::init('DummyCustom');
+        $dataCustom = array('DummyCustom' => $data['Dummy']);
+        $dataCustom['DummyCustom']['mod_note'] = $expected;
+        $this->DummyCustom->set($dataCustom);
+        $this->assertIdentical($this->DummyCustom->Behaviors->Modification->__getDescription($this->DummyCustom), $expected);
+        unset($this->DummyCustom);
     }
 
     function __unsetChangeable($modifications) {
