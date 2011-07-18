@@ -23,14 +23,14 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         'plugin.modification_tracing.mod_trac'
     );
 
-	function startTest() {
+    function startTest() {
         $this->Dummy =& ClassRegistry::init('Dummy');
-	}
+    }
 
-	function endTest() {
-		unset($this->Dummy);
-		ClassRegistry::flush();
-	}
+    function endTest() {
+        unset($this->Dummy);
+        ClassRegistry::flush();
+    }
 
     function testFind() {
         $dummy = $this->Dummy->findById(1);
