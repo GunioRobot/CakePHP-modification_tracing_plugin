@@ -8,6 +8,7 @@ class ModificationBehavior extends ModelBehavior {
     var $_modelName = null;
     var $_modificatorField = false;
     var $_descriptionField = false;
+    var $_excludeFields = array();
 
     function setup(&$model, $config = array()){
         $default = array(
@@ -15,6 +16,7 @@ class ModificationBehavior extends ModelBehavior {
             'modelName' => 'Modification',
             'modificatorField' => 'modificator',
             'descriptionField' => 'description',
+            'excludeFields' => array('created', 'modified')
         );
         $option = array_merge($default, $config);
 
@@ -22,6 +24,7 @@ class ModificationBehavior extends ModelBehavior {
         $this->_modelName = $option['modelName'];
         $this->_modificatorField = $option['modificatorField'];
         $this->_descriptionField = $option['descriptionField'];
+        $this->_excludeFields = $option['excludeFields'];
     }
 
     function beforeFind(&$model, $queryData)
@@ -80,12 +83,12 @@ class ModificationBehavior extends ModelBehavior {
                     if ($className == $this->_modelName) { continue; }
                     $old = (isset($this->_before[$className])) ? $this->_before[$className] : array();
                     foreach($new as $key => $val){
-                        if (// 前データがあって、フォーム値と異なる場合
+                        if ( // 前データがあって、フォーム値と異なる場合
                             ((array_key_exists($key, $old) && (strcmp($old[$key], $val) != 0)) ||
-                            // 前データがなく、値が空でなく(理由忘れた…)、主キーでない場合 TODO: なんで？
+                             // 前データがなく、値が空でなく(理由忘れた…)、主キーでない場合 TODO: なんで？
                              (! array_key_exists($key, $old) && ! $val && $key != $model->primaryKey)) &&
-                            // キーが modificator, descripition でない
-                            $this->__isNotModificatorOrDescription($key))
+                             // キーが modificator, descripition, または excludeFields で指定されたフィールドでない
+                             $this->__isNotExcludeFields($key))
                         {
                             $o = array_key_exists($key, $old) ? $old[$key] : '';
                             $modifications[$className][$key] = array('before' => $o, 'after' => $val);
@@ -99,7 +102,7 @@ class ModificationBehavior extends ModelBehavior {
                 foreach($model->data as $className => $vals) {
                     if ($className == $this->_modelName) { continue; }
                     foreach($vals as $key => $val){
-                        if ($this->__isNotModificatorOrDescription($key)) {
+                        if ($this->__isNotExcludeFields($key)) {
                             $modifications[$className][$key] = array('before' => '', 'after' => $val);
                         }
                     }
@@ -132,7 +135,7 @@ class ModificationBehavior extends ModelBehavior {
             foreach($this->_before as $className => $vals) {
                 if ($className == $this->_modelName) { continue; }
                 foreach($vals as $key => $val){
-                    if ($this->__isNotModificatorOrDescription($key) && $key != $model->primaryKey) {
+                    if ($this->__isNotExcludeFields($key) && $key != $model->primaryKey) {
                         $modifications[$className][$key] = array('before' => $val, 'after' => '');
                     }
                 }
@@ -148,8 +151,8 @@ class ModificationBehavior extends ModelBehavior {
         );
     }
 
-    function __isNotModificatorOrDescription($key){
-        return ($this->_modificatorField != $key) && ($this->_descriptionField != $key);
+    function __isNotExcludeFields($key){
+        return ($this->_modificatorField != $key) && ($this->_descriptionField != $key) && ! in_array($key, $this->_excludeFields);
     }
 
     function __getModificator(&$model){

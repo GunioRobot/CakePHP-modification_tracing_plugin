@@ -10,6 +10,8 @@ class DummyFixture extends CakeTestFixture {
         'day3' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 4),
         'go' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 1),
         'back' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 1),
+        'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
+        'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
         'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -23,6 +25,8 @@ class DummyFixture extends CakeTestFixture {
             'day3' => 0,
             'go' => 2,
             'back' => 2,
+            'created' => '2011/07/19 18:31:00',
+            'modified' => '2011/07/19 18:31:00',
         ),
     );
 }

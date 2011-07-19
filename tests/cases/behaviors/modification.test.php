@@ -13,6 +13,7 @@ class DummyCustom extends Dummy {
         'modelName' => 'ModTrac',
         'modificatorField' => 'mod_user',
         'descriptionField' => 'mod_note',
+        'excludeFields' => array('created', 'modified', 'exclude_field'),
     ));
 }
 
@@ -36,6 +37,10 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         $dummy = $this->Dummy->findById(1);
         $expected = $this->_expectedSample;
 
+        unset($dummy['Dummy']['created'], $dummy['Dummy']['modified']);
+        $dummy['Modification'] = $this->__unsetCHangeable($dummy['Modification']);
+        $expected['Modification'] = $this->__unsetCHangeable($expected['Modification']);
+
         $this->assertEqual($dummy, $expected);
     }
 
@@ -55,6 +60,7 @@ class ModificationbehaviorTestCase extends CakeTestCase {
 
         $insertedID = $this->Dummy->getLastInsertID();
         $created = $this->Dummy->findById($insertedID);
+        unset($created['Dummy']['created'], $created['Dummy']['modified']);
         $created['Modification'] = $this->__unsetChangeable($created['Modification']);
 
         $expected = array(
@@ -92,6 +98,7 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         $this->Dummy->save(array_merge_recursive($edit, array('Dummy' => array('modificator' => 'user3', 'description' => 'Œð’ÊŽè’i•ÏX'))));
 
         $edited = $this->Dummy->findById($insertedID);
+        unset($edited['Dummy']['created'], $edited['Dummy']['modified']);
         $edited['Modification'] = $this->__unsetChangeable($edited['Modification']);
 
         $expected = array(
@@ -155,16 +162,19 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         $this->assertEqual($modifications, $expected);
     }
 
-    function test__isNotModificatorOrDescription() {
-        $this->assertTrue($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('test'));
-        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('modificator'));
-        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotModificatorOrDescription('description'));
+    function test__isNotExcludeFields() {
+        $this->assertTrue($this->Dummy->Behaviors->Modification->__isNotExcludeFields('test'));
+        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotExcludeFields('modificator'));
+        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotExcludeFields('description'));
+        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotExcludeFields('created'));
+        $this->assertFalse($this->Dummy->Behaviors->Modification->__isNotExcludeFields('modified'));
 
         $this->DummyCustom = ClassRegistry::init('DummyCustom');
-        $this->assertTrue($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('modificator'));
-        $this->assertTrue($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('description'));
-        $this->assertFalse($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('mod_user'));
-        $this->assertFalse($this->DummyCustom->Behaviors->Modification->__isNotModificatorOrDescription('mod_note'));
+        $this->assertTrue($this->DummyCustom->Behaviors->Modification->__isNotExcludeFields('modificator'));
+        $this->assertTrue($this->DummyCustom->Behaviors->Modification->__isNotExcludeFields('description'));
+        $this->assertFalse($this->DummyCustom->Behaviors->Modification->__isNotExcludeFields('mod_user'));
+        $this->assertFalse($this->DummyCustom->Behaviors->Modification->__isNotExcludeFields('mod_note'));
+        $this->assertFalse($this->DummyCustom->Behaviors->Modification->__isNotExcludeFields('exclude_field'));
         unset($this->DummyCustom);
     }
 
@@ -224,6 +234,7 @@ class ModificationbehaviorTestCase extends CakeTestCase {
 
         $insertedID = $this->DummyCustom->getLastInsertID();
         $created = $this->DummyCustom->findById($insertedID);
+        unset($created['DummyCustom']['created'], $created['DummyCustom']['modified']);
         $created['ModTrac'] = $this->__unsetChangeable($created['ModTrac']);
 
         $expected = array(
@@ -238,8 +249,7 @@ class ModificationbehaviorTestCase extends CakeTestCase {
             'mod_user' => $expected['ModTrac'][0]['modificator'],  // key: modificator -> mod_user
             'mod_note' => $expected['ModTrac'][0]['description'],  // key: description -> mod_note
         ));
-        unset($expected['ModTrac'][0]['modificator']);  // unset key 'modificator'
-        unset($expected['ModTrac'][0]['description']);  // unset key 'description'
+        unset($expected['ModTrac'][0]['modificator'], $expected['ModTrac'][0]['description']);  // unset key 'modificator', 'description'
 
         $this->assertEqual($created, $expected);
 
@@ -250,8 +260,7 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         $count = count($modifications);
         $ret = array($count);
         for ($i=0; $i<$count; $i++) {
-            unset($modifications[$i]['id']);
-            unset($modifications[$i]['created']);
+            unset($modifications[$i]['id'], $modifications[$i]['created'], $modifications[$i]['modified']);
             $ret[$i] = $modifications[$i];
         }
 
