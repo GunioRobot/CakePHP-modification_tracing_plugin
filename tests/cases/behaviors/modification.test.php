@@ -141,7 +141,6 @@ class ModificationbehaviorTestCase extends CakeTestCase {
         );
         $modifications = array('Modification' => array(count($tmp_modifications)));
         for ($i=0; $i<count($tmp_modifications); $i++) {
-            $tmp_modifications[$i]['Modification']['modifications'] = json_decode($tmp_modifications[$i]['Modification']['modifications'], true);
             $modifications['Modification'][$i] = $tmp_modifications[$i]['Modification'];
         }
 

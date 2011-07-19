@@ -63,4 +63,14 @@ class Modification extends ModificationTracingAppModel {
 			),
 		),
 	);
+
+    function afterFind($results){
+        for ($i=0; $i<count($results); $i++){
+            if (array_key_exists($this->alias, $results[$i])){
+                $results[$i][$this->alias]['modifications'] = json_decode($results[$i][$this->alias]['modifications'], true);
+            }
+        }
+
+        return $results;
+    }
 }

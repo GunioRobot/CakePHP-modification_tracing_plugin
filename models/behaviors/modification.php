@@ -49,19 +49,6 @@ class ModificationBehavior extends ModelBehavior {
         return true;
     }
 
-    function afterFind(&$model, $results){
-        for ($i=0; $i<count($results); $i++){
-            $r =& $results[$i];
-            if (array_key_exists($this->_modelName, $r)){
-                for ($j=0; $j<count($r[$this->_modelName]); $j++){
-                    $r[$this->_modelName][$j]['modifications'] = json_decode($r[$this->_modelName][$j]['modifications'], true);
-                }
-            }
-        }
-
-        return $results;
-    }
-
     var $_before = array();
     function beforeSave(&$model){
         if ($model->id){
