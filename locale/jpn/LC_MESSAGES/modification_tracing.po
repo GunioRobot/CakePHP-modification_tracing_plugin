@@ -1,0 +1,63 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2011-07-21 10:47+0900\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: \views\elements\modifications.ctp:5
+msgid "modification_tracing_no"
+msgstr "No."
+
+#: \views\elements\modifications.ctp:6
+msgid "modification_tracing_model_name"
+msgstr "name"
+
+#: \views\elements\modifications.ctp:7
+msgid "modification_tracing_foreign_key"
+msgstr "ID"
+
+#: \views\elements\modifications.ctp:8
+msgid "modification_tracing_operation"
+msgstr "opr"
+
+#: \views\elements\modifications.ctp:9
+msgid "modification_tracing_modifications"
+msgstr "modifications"
+
+#: \views\elements\modifications.ctp:10
+msgid "modification_tracing_modificator"
+msgstr "modificator"
+
+#: \views\elements\modifications.ctp:11
+msgid "modification_tracing_description"
+msgstr "description"
+
+#: \views\elements\modifications.ctp:12
+msgid "modification_tracing_created"
+msgstr "created"
+
+#: \views\elements\modifications.ctp:40
+msgid "modification_tracing_key"
+msgstr "key"
+msgid "modification_tracing_before"
+msgstr "before"
+msgid "modification_tracing_after"
+msgstr "after"
+
+#: \views\helpers\modification_tracing_helper:6
+msgid "modification_tracing_create"
+msgstr "create"
+msgid "modification_tracing_edit"
+msgstr "edit"
+msgid "modification_tracing_delete"
+msgstr "delete"
