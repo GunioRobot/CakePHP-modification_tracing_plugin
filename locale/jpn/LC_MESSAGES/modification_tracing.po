@@ -20,7 +20,7 @@ msgstr "No."
 
 #: \views\elements\modifications.ctp:6
 msgid "modification_tracing_model_name"
-msgstr "name"
+msgstr "Model"
 
 #: \views\elements\modifications.ctp:7
 msgid "modification_tracing_foreign_key"
